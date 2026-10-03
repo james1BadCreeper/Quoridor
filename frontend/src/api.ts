@@ -1,6 +1,6 @@
 // 后端 API 封装
 export interface Pos { r: number; c: number }
-export interface WallPos { r: number; c: number; dir: 'h' | 'v' }
+export interface WallPos { r: number; c: number; dir: 'h' | 'v'; by?: number }
 export type Move = { type: 'move'; to: Pos } | { type: 'wall'; at: WallPos };
 
 export interface GameState {

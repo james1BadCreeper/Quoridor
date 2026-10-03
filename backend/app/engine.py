@@ -28,13 +28,17 @@ class Wall:
     r: int
     c: int
     dir: str  # 'h' | 'v'
+    by: int = -1  # 放墙玩家 0/1；-1 表示未知（兼容旧棋谱）
 
     def to_dict(self):
-        return {"r": self.r, "c": self.c, "dir": self.dir}
+        d = {"r": self.r, "c": self.c, "dir": self.dir}
+        if self.by in (0, 1):
+            d["by"] = self.by
+        return d
 
     @staticmethod
     def from_dict(d):
-        return Wall(r=int(d["r"]), c=int(d["c"]), dir=str(d["dir"]))
+        return Wall(r=int(d["r"]), c=int(d["c"]), dir=str(d["dir"]), by=int(d.get("by", -1)))
 
 
 @dataclass
@@ -277,6 +281,7 @@ def apply_move(state: GameState, move: dict) -> GameState:
             ns.winner = p
     else:
         ns.walls.append(m["at"])
+        ns.walls[-1].by = p  # 记住放墙者，供前端按玩家着色
         ns.walls_remaining[p] -= 1
     ns.move_number += 1
     if ns.winner is None:

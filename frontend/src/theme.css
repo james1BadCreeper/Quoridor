@@ -1,0 +1,124 @@
+/* Quoridor 深色主题：全局底 + 卡片 + 棋盘动效 */
+
+:root {
+  --bg0: #0b1020;
+  --bg1: #131b31;
+  --card: #182238;
+  --card-edge: #2a3a5c;
+  --text: #e8eefc;
+  --muted: #93a1c0;
+  --p0: #ff6b4a; /* P1 橙红 */
+  --p0-deep: #c2410c;
+  --p1: #38bdf8; /* P2 青蓝 */
+  --p1-deep: #0369a1;
+  --ok: #34d399;
+  --danger: #f87171;
+}
+
+body {
+  margin: 0;
+  color: var(--text);
+  background:
+    radial-gradient(1200px 600px at 15% -5%, #233257 0%, transparent 60%),
+    radial-gradient(1000px 500px at 90% 0%, #3a2350 0%, transparent 55%),
+    linear-gradient(180deg, var(--bg1), var(--bg0));
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+.qapp { max-width: 1160px; margin: 0 auto; padding: 20px 18px 40px; }
+.qtitle {
+  margin: 4px 0 2px; font-size: 30px; letter-spacing: 2px;
+  background: linear-gradient(90deg, var(--p0), #fbbf24 45%, var(--p1));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.qsub { color: var(--muted); margin: 0 0 14px; font-size: 13px; }
+
+.qtabbar { display: flex; gap: 8px; margin-bottom: 14px; align-items: center; }
+.qcard {
+  background: linear-gradient(180deg, #1b2742, var(--card));
+  border: 1px solid var(--card-edge);
+  border-radius: 12px;
+  padding: 14px 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+.qcard h3 { margin: 0 0 10px; font-size: 15px; color: #cdd8f3; }
+
+button, select, input[type="text"], input:not([type]) {
+  background: #222f52; color: var(--text);
+  border: 1px solid #3b4f7e; border-radius: 8px;
+  padding: 7px 12px; font-size: 13px;
+}
+button { cursor: pointer; transition: transform 0.08s, box-shadow 0.15s, background 0.15s; }
+button:hover:not(:disabled) { background: #2c3d68; box-shadow: 0 0 0 1px #4c669e, 0 4px 14px rgba(0, 0, 0, 0.4); }
+button:disabled { opacity: 0.45; cursor: not-allowed; }
+button.primary { background: linear-gradient(90deg, #ea580c, #f59e0b); border-color: #fdba74; font-weight: 700; }
+input[type="file"] { color: var(--muted); font-size: 12px; }
+
+.qtabbar button.active { background: #2c3d68; border-color: var(--p1); box-shadow: 0 0 10px rgba(56, 189, 248, 0.35); }
+
+/* 走子/放墙分段切换器 */
+.qseg { display: inline-flex; border: 1px solid #3b4f7e; border-radius: 10px; overflow: hidden; }
+.qseg button { border: 0; border-radius: 0; background: #1a2542; }
+.qseg button.active { background: linear-gradient(90deg, #ea580c, #f59e0b); font-weight: 700; }
+
+.qerr { color: #fff; background: linear-gradient(90deg, #991b1b, #c2410c); padding: 9px 12px; border-radius: 8px; margin-bottom: 10px; font-size: 13px; }
+
+/* 对战布局 */
+.qlayout { display: flex; gap: 18px; flex-wrap: wrap; align-items: flex-start; }
+.qside { flex: 1 1 300px; min-width: 290px; display: flex; flex-direction: column; gap: 14px; }
+.qmain { flex: 1 1 480px; min-width: 340px; }
+
+/* 玩家卡 */
+.pcard { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px;
+  background: #141d33; border: 1px solid #2a3a5c; margin-bottom: 8px; }
+.pcard.turn0 { border-color: var(--p0); box-shadow: 0 0 12px rgba(255, 107, 74, 0.35); }
+.pcard.turn1 { border-color: var(--p1); box-shadow: 0 0 12px rgba(56, 189, 248, 0.35); }
+.pdot { width: 14px; height: 14px; border-radius: 50%; flex: none; }
+.pdot.p0 { background: radial-gradient(circle at 35% 30%, #ffc4b0, var(--p0) 60%, var(--p0-deep)); }
+.pdot.p1 { background: radial-gradient(circle at 35% 30%, #c9ecff, var(--p1) 60%, var(--p1-deep)); }
+.pname { font-weight: 700; }
+.pbadge { font-size: 11px; color: var(--muted); border: 1px solid #3b4f7e; border-radius: 20px; padding: 1px 8px; }
+.pwalls { display: flex; gap: 3px; margin-left: auto; }
+.pwalls i { width: 8px; height: 14px; border-radius: 2px; background: #33415e; }
+.pwalls i.on0 { background: linear-gradient(180deg, var(--p0), var(--p0-deep)); }
+.pwalls i.on1 { background: linear-gradient(180deg, var(--p1), var(--p1-deep)); }
+
+/* 状态条 */
+.qstatus { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; font-size: 13px; color: #cdd8f3; flex-wrap: wrap; }
+
+/* 获胜横幅 */
+.qwin { padding: 12px 16px; border-radius: 10px; margin-bottom: 10px; font-size: 16px; font-weight: 800;
+  text-align: center; color: #fff; }
+.qwin.w0 { background: linear-gradient(90deg, #9a3412, var(--p0)); box-shadow: 0 0 22px rgba(255, 107, 74, 0.5); }
+.qwin.w1 { background: linear-gradient(90deg, #075985, var(--p1)); box-shadow: 0 0 22px rgba(56, 189, 248, 0.5); }
+
+/* 图例 */
+.qlegend { display: flex; gap: 14px; font-size: 12px; color: var(--muted); margin-top: 10px; align-items: center; flex-wrap: wrap; }
+.qlegend .sw { display: inline-block; width: 22px; height: 8px; border-radius: 2px; vertical-align: middle; margin-right: 5px; }
+.qlegend .sw0 { background: linear-gradient(90deg, var(--p0), var(--p0-deep)); }
+.qlegend .sw1 { background: linear-gradient(90deg, var(--p1), var(--p1-deep)); }
+
+/* 棋盘容器 */
+.qboard-wrap { display: inline-block; padding: 14px; border-radius: 14px;
+  background: linear-gradient(180deg, #1c2947, #141d33);
+  border: 1px solid #31456f; box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5); }
+
+/* 棋盘内动效 */
+.qboard .move-dot { animation: qpulse 1.6s ease-in-out infinite; }
+@keyframes qpulse { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
+.qboard .turn-ring { animation: qglow 1.8s ease-in-out infinite; }
+@keyframes qglow { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+.qboard .wall-slot { transition: opacity 0.12s; }
+.qboard .wall-slot.ok:hover { opacity: 1 !important; }
+
+/* 回放 */
+.qreplay-bar { display: flex; gap: 10px; align-items: center; margin: 10px 0; flex-wrap: wrap; }
+input[type="range"] { flex: 1 1 200px; accent-color: var(--p1); }
+.qjson { background: #0e1528; border: 1px solid #2a3a5c; color: #a9b8d8; padding: 10px; border-radius: 8px; font-size: 12px; max-height: 260px; overflow: auto; }
+
+.qailist { list-style: none; padding: 0; margin: 8px 0 0; font-size: 12px; color: var(--muted); }
+.qailist li { padding: 5px 8px; border: 1px solid #2a3a5c; border-radius: 7px; margin-bottom: 5px; background: #141d33; }
+.qrow { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; flex-wrap: wrap; }
+.qbtns { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.qhint { color: var(--muted); font-size: 13px; }

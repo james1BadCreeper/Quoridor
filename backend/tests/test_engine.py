@@ -35,6 +35,18 @@ def test_illegal_wall_overlap():
         pass
 
 
+def test_wall_owner():
+    st = GameState()
+    st = apply_move(st, {"type": "wall", "at": {"r": 1, "c": 1, "dir": "h"}})
+    assert st.walls[0].by == 0
+    d = st.to_dict()
+    assert d["walls"][0]["by"] == 0
+    # 旧棋谱（无 by）仍可读，by 缺省为未知
+    st2 = GameState.from_dict({"walls": [{"r": 1, "c": 1, "dir": "h"}]})
+    assert st2.walls[0].by == -1
+    assert "by" not in st2.to_dict(include_legal=False)["walls"][0]
+
+
 def test_win():
     st = GameState(pawns=[Pos(1, 4), Pos(0, 0)], walls=[], walls_remaining=[10, 10], current_player=0)
     st = apply_move(st, {"type": "move", "to": {"r": 0, "c": 4}})
